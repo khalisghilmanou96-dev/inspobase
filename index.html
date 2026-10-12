@@ -13,7 +13,7 @@
 /* V10 — editorial black/graphite identity */
 .hero{padding:62px 0 56px;min-height:345px;border-bottom:1px solid #e8e8e8}
 .hero:before{opacity:.10;filter:grayscale(1) contrast(1.1)}
-.hero:after{content:'IB / 001';position:absolute;right:18px;top:24px;font-size:12px;font-weight:700;letter-spacing:.22em;color:#a5a5a5}
+
 .eyebrow{display:inline-flex;align-items:center;gap:12px;color:#303030;letter-spacing:.22em;font-size:12px}
 .eyebrow:before{content:'';width:25px;height:2px;background:#1a1a1a}
 .eyebrow .muted{color:#999;font-weight:500}
@@ -30,7 +30,7 @@
 .filters button.active{background:#191919;color:#fff;box-shadow:0 3px 12px #00000022;animation:categoryEnter .3s cubic-bezier(.2,.8,.2,1)}
 .filters button:focus-visible{outline:2px solid #555;outline-offset:3px}
 @keyframes categoryEnter{from{transform:scale(.92);opacity:.7}to{transform:scale(1);opacity:1}}
-@media(max-width:700px){.hero{padding:42px 0 40px;min-height:auto}.filters-wrap{gap:11px}.filters{width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}.filters button{white-space:nowrap;padding:11px 14px}.hero:after{right:0;top:15px}}
+@media(max-width:700px){.hero{padding:42px 0 40px;min-height:auto}.filters-wrap{gap:11px}.filters{width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}.filters button{white-space:nowrap;padding:11px 14px}}
 @media(prefers-reduced-motion:reduce){.filters button,.filters button.active{animation:none;transition:none}}
 .animated-design .motion-tag{position:absolute;z-index:1;top:12px;right:12px;background:#111;color:white;font-size:10px;font-weight:800;letter-spacing:1.4px;padding:7px 9px;border-radius:2px}.animated-design img,.animated-design video{object-fit:cover;width:100%;height:100%;display:block}@media(prefers-reduced-motion:reduce){.tile img{animation:none!important;transition:none!important}}.sort-switch{display:flex;align-items:center;gap:3px;background:#eaeaea;border:1px solid #dcdcdc;padding:5px;border-radius:13px}.sort-label{font-size:9px;letter-spacing:.14em;color:#888;font-weight:800;padding:0 11px}.sort-option{border:0;background:transparent;color:#777;border-radius:9px;padding:10px 15px;font-size:12px;font-weight:800;letter-spacing:.015em;transition:background .25s,color .25s,box-shadow .25s}.sort-option.selected{background:#181818;color:white;box-shadow:0 4px 12px #0002}.sort-option:hover:not(.selected){background:white;color:#171717}.sort-symbol{font-size:14px;margin-right:4px}.status[hidden]{display:none}.down{border:1px solid #dedede;border-radius:50%;background:white;box-shadow:0 4px 24px #0000000a;transition:transform .2s,box-shadow .2s}.down:hover{box-shadow:0 8px 30px #00000014}@media(max-width:700px){.sort-label{display:none}.sort-option{padding:10px}}
 #count{display:none!important}#count{display:none!important}
@@ -59,7 +59,138 @@
 @media (prefers-reduced-motion: reduce) {
   #more { transition: none !important; }
 }
-#count{display:none!important;visibility:hidden!important}</style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button id="login">Sign in</button><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">THE CREATIVE INDEX <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> BLACK / GREY EDITION</div></section><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div><div class="toolbar"><div class="tools"><button id="view">Grid view</button><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option selected" data-sort="new" aria-pressed="true"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option" data-sort="popular" aria-pressed="false"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs">↓</button><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. Screenshots by screenshotof.com.</footer>
+#count{display:none!important;visibility:hidden!important}
+/* inspoBase — Header motion and gallery layout V17 */
+
+/* Gallery controls: upper right, above the designs */
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  margin: 0 0 18px;
+  padding: 20px 0 0;
+}
+
+.toolbar .tools {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+/* Load more: floating arrow BELOW the mosaic */
+#more {
+  position: relative !important;
+  display: block;
+  margin: 36px auto 20px !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 60px;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 12px 20px !important;
+  font-size: 39px;
+  line-height: 1;
+  color: #171717;
+  cursor: pointer;
+  transition: transform .35s ease, opacity .35s ease;
+}
+
+#more[hidden] {
+  display: none !important;
+}
+
+#more:hover {
+  transform: translateY(7px);
+  opacity: .6;
+}
+
+/* Animated Sign in and Sponsor buttons */
+.nav-right #login,
+.nav-right #sponsor {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 8px;
+  transition:
+    transform .35s cubic-bezier(.2,.8,.2,1),
+    box-shadow .35s ease,
+    color .35s ease,
+    border-color .35s ease;
+}
+
+.nav-right #login::before,
+.nav-right #sponsor::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 15%,
+    rgba(160,160,160,.23) 48%,
+    transparent 80%
+  );
+  transform: translateX(-130%);
+  transition: transform .7s cubic-bezier(.2,.8,.2,1);
+}
+
+.nav-right #sponsor::before {
+  background: linear-gradient(
+    110deg,
+    transparent 15%,
+    rgba(255,255,255,.22) 48%,
+    transparent 80%
+  );
+}
+
+.nav-right #login:hover,
+.nav-right #sponsor:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 9px 22px rgba(0,0,0,.12);
+}
+
+.nav-right #login:hover::before,
+.nav-right #sponsor:hover::before {
+  transform: translateX(130%);
+}
+
+.nav-right #login:active,
+.nav-right #sponsor:active {
+  transform: translateY(0) scale(.97);
+}
+
+.nav-right #login:focus-visible,
+.nav-right #sponsor:focus-visible {
+  outline: 2px solid #555;
+  outline-offset: 3px;
+}
+
+@media(max-width:700px) {
+  .toolbar .tools {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .toolbar {
+    margin-bottom: 14px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  #more,
+  .nav-right #login,
+  .nav-right #sponsor,
+  .nav-right #login::before,
+  .nav-right #sponsor::before {
+    transition: none !important;
+  }
+}
+
+</style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button id="login">Sign in</button><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">THE CREATIVE INDEX <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> BLACK / GREY EDITION</div></section><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div><div class="toolbar"><div class="tools"><button id="view">Grid view</button><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option selected" data-sort="new" aria-pressed="true"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option" data-sort="popular" aria-pressed="false"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs">↓</button><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. Screenshots by screenshotof.com.</footer>
 <dialog id="sponsorDialog"><button class="close" id="closeSponsor">✕</button><h2>Sponsor a design</h2><p>Set your budget. Payments are not enabled yet.</p><label>Website URL<input id="url" type="url" placeholder="https://example.com"></label><label>Budget: <strong id="budgetLabel">$25</strong><input id="budget" type="range" min="1" max="100" value="25"></label><p id="split"></p><button class="dark" id="checkout">Continue to checkout</button><p id="paymentNote">Stripe Connect integration is planned, not active.</p></dialog><dialog id="loginDialog"><button class="close" id="closeLogin">✕</button><h2>Sign in</h2><p>Account registration will be available after authentication is configured.</p><input type="email" placeholder="you@example.com"><button class="dark" id="auth">Continue</button><p id="authNote"></p></dialog>
 <script>
 'use strict';
