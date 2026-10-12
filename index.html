@@ -190,6 +190,131 @@
   }
 }
 
+
+/* inspoBase — Animated header buttons V18 */
+
+.nav-right #login,
+.nav-right #sponsor {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transform: translateZ(0);
+  animation: headerButtonFloat 3.5s ease-in-out infinite;
+  transition:
+    transform .25s ease,
+    box-shadow .3s ease,
+    border-color .3s ease;
+}
+
+.nav-right #sponsor {
+  animation-delay: -1.7s;
+}
+
+/* Continuous animated light sweep */
+.nav-right #login::before,
+.nav-right #sponsor::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -40% -80%;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(150,150,150,.28) 48%,
+    transparent 61%
+  );
+  transform: translateX(-100%) rotate(8deg);
+  animation: headerLightSweep 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.nav-right #sponsor::before {
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255,255,255,.28) 48%,
+    transparent 61%
+  );
+  animation-delay: -2s;
+}
+
+/* Click ripple */
+.nav-right #login::after,
+.nav-right #sponsor::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  background: rgba(120,120,120,.25);
+  transform: translate(-50%,-50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-right #sponsor::after {
+  background: rgba(255,255,255,.35);
+}
+
+.nav-right #login:hover,
+.nav-right #sponsor:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 9px 24px rgba(0,0,0,.15);
+  animation-play-state: paused;
+}
+
+.nav-right #login:active,
+.nav-right #sponsor:active {
+  transform: translateY(1px) scale(.94) !important;
+  box-shadow: 0 2px 7px rgba(0,0,0,.12);
+}
+
+.nav-right #login:active::after,
+.nav-right #sponsor:active::after {
+  animation: headerClickRipple .5s ease-out forwards;
+}
+
+@keyframes headerButtonFloat {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  }
+  50% {
+    box-shadow: 0 5px 18px rgba(0,0,0,.13);
+  }
+}
+
+@keyframes headerLightSweep {
+  0%, 20% {
+    transform: translateX(-100%) rotate(8deg);
+  }
+  55%, 100% {
+    transform: translateX(100%) rotate(8deg);
+  }
+}
+
+@keyframes headerClickRipple {
+  0% {
+    opacity: 1;
+    transform: translate(-50%,-50%) scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%,-50%) scale(15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-right #login,
+  .nav-right #sponsor,
+  .nav-right #login::before,
+  .nav-right #sponsor::before {
+    animation: none !important;
+  }
+}
+
 </style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button id="login">Sign in</button><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">THE CREATIVE INDEX <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> BLACK / GREY EDITION</div></section><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div><div class="toolbar"><div class="tools"><button id="view">Grid view</button><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option selected" data-sort="new" aria-pressed="true"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option" data-sort="popular" aria-pressed="false"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs">↓</button><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. Screenshots by screenshotof.com.</footer>
 <dialog id="sponsorDialog"><button class="close" id="closeSponsor">✕</button><h2>Sponsor a design</h2><p>Set your budget. Payments are not enabled yet.</p><label>Website URL<input id="url" type="url" placeholder="https://example.com"></label><label>Budget: <strong id="budgetLabel">$25</strong><input id="budget" type="range" min="1" max="100" value="25"></label><p id="split"></p><button class="dark" id="checkout">Continue to checkout</button><p id="paymentNote">Stripe Connect integration is planned, not active.</p></dialog><dialog id="loginDialog"><button class="close" id="closeLogin">✕</button><h2>Sign in</h2><p>Account registration will be available after authentication is configured.</p><input type="email" placeholder="you@example.com"><button class="dark" id="auth">Continue</button><p id="authNote"></p></dialog>
 <script>
