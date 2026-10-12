@@ -988,6 +988,74 @@ async function discoverArena(){
  }catch(error){return 0}finally{arenaBusy=false}
 }
 
+
+// INSPObase_V34_SOURCES — public, browser-side catalogues; Smithsonian requires a private key and is not enabled.
+const museumState=new Map();
+let museumCursor=0;
+const museumKeywords={All:['graphic design','poster','typography','abstract','illustration'],Design:['poster','graphic','print','abstract'],Marketing:['advertising','poster','commercial'],Agency:['graphic design','modernism'],Productivity:['diagram','information design'],Social:['photography','collage'],Branding:['logo','typography','poster'],'UI / Product':['industrial design','product design']};
+const museumSources=['Chicago','Cleveland','Met','LOC','V&A','Rijksmuseum'];
+function museumQuery(source){
+ const words=museumKeywords[category]||museumKeywords.All;
+ const key=source+':'+category;
+ const st=museumState.get(key)||{page:0,term:0,exhausted:false};
+ if(st.exhausted){st.term=(st.term+1)%words.length;st.page=0;st.exhausted=false}
+ museumState.set(key,st);
+ return {key,st,term:words[st.term]};
+}
+async function discoverMuseum(){
+ const source=museumSources[museumCursor++%museumSources.length];
+ const {key,st,term}=museumQuery(source);
+ const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),9500);
+ const params=x=>new URLSearchParams(x).toString();
+ let entries=[];let hasMore=true;
+ try{
+  if(source==='Chicago'){
+   const q=params({q:term,page:st.page+1,limit:40,fields:'id,title,image_id,is_public_domain,artist_title'});
+   const d=await (await fetch('https://api.artic.edu/api/v1/artworks/search?'+q,{signal:controller.signal})).json();
+   entries=(d.data||[]).filter(x=>x.image_id&&x.is_public_domain).map(x=>({id:x.id,title:x.title,image:'https://www.artic.edu/iiif/2/'+x.image_id+'/full/600,/0/default.jpg',url:'https://www.artic.edu/artworks/'+x.id}));
+   hasMore=(d.pagination?.current_page||st.page+1)<(d.pagination?.total_pages||0);
+  }else if(source==='Cleveland'){
+   const q=params({q:term,has_image:1,cc0:1,limit:40,skip:st.page*40});
+   const d=await (await fetch('https://openaccess-api.clevelandart.org/api/artworks/?'+q,{signal:controller.signal})).json();
+   entries=(d.data||[]).filter(x=>x.images?.web?.url).map(x=>({id:x.id,title:x.title,image:x.images.web.url,url:x.url||'https://www.clevelandart.org/art/'+x.accession_number}));
+   hasMore=(st.page+1)*40<(d.info?.total||0);
+  }else if(source==='Met'){
+   const q=params({q:term,hasImages:true,isPublicDomain:true});
+   const d=await (await fetch('https://collectionapi.metmuseum.org/public/collection/v1/search?'+q,{signal:controller.signal})).json();
+   const ids=(d.objectIDs||[]).slice(st.page*15,(st.page+1)*15);
+   const objs=await Promise.allSettled(ids.map(async id=>{const r=await fetch('https://collectionapi.metmuseum.org/public/collection/v1/objects/'+id,{signal:controller.signal});return r.ok?r.json():null}));
+   entries=objs.filter(x=>x.status==='fulfilled'&&x.value?.primaryImageSmall).map(x=>({id:x.value.objectID,title:x.value.title,image:x.value.primaryImageSmall,url:x.value.objectURL}));
+   hasMore=(st.page+1)*15<(d.objectIDs||[]).length;
+  }else if(source==='LOC'){
+   const q=params({fo:'json',at:'results,pagination',q:term,fa:'online-format:image',c:40,sp:st.page+1});
+   const d=await (await fetch('https://www.loc.gov/photos/?'+q,{signal:controller.signal})).json();
+   entries=(d.results||[]).filter(x=>x.image_url?.length).map(x=>({id:x.id,title:x.title,image:x.image_url.find(u=>/^https:/.test(u))||x.image_url[0],url:x.id}));
+   hasMore=!!d.pagination?.next;
+  }else if(source==='V&A'){
+   const q=params({q:term,page:st.page+1,page_size:40,images_exist:1});
+   const d=await (await fetch('https://api.vam.ac.uk/v2/objects/search?'+q,{signal:controller.signal})).json();
+   entries=(d.records||[]).filter(x=>x._primaryImageId).map(x=>({id:x.systemNumber,title:x._primaryTitle||x.objectType||'Design object',image:'https://framemark.vam.ac.uk/collections/'+x._primaryImageId+'/full/600,/0/default.jpg',url:'https://collections.vam.ac.uk/item/'+x.systemNumber+'/'}));
+   hasMore=(st.page+1)*40<(d.info?.record_count||0);
+  }else if(source==='Rijksmuseum'){
+   const q=params({q:term,limit:40,offset:st.page*40,imagetype:'color'});
+   const d=await (await fetch('https://data.rijksmuseum.nl/search/collection?'+q,{signal:controller.signal})).json();
+   const results=d.results||d.items||[];
+   entries=results.filter(x=>x.image?.url||x.webImage?.url).map(x=>({id:x.id||x.objectNumber,title:x.title||'Artwork',image:x.image?.url||x.webImage?.url,url:x.url||'https://www.rijksmuseum.nl/en/collection/'+x.objectNumber}));
+   hasMore=results.length===40;
+  }
+  const existing=new Set(items.map(x=>x.id));let added=0;
+  for(const e of entries){
+   if(!e.id||!e.image||!e.url||!/^https:/.test(e.image)||!/^https:/.test(e.url))continue;
+   const id='museum-'+source+'-'+e.id;if(existing.has(id))continue;existing.add(id);
+   items.push({id,name:String(e.title||'Visual reference').slice(0,90),domain:source,cat:category==='All'?'Design':category,url:e.url,src:e.image,score:20,date:Date.now()-added,animated:false,source});added++;
+  }
+  st.page++;if(!hasMore||!entries.length)st.exhausted=true;
+  if(added){render();scheduleValidation()}
+  return added;
+ }catch(e){console.warn('Source temporarily unavailable:',source,e.message);st.exhausted=true;return 0}
+ finally{clearTimeout(timer)}
+}
+
 let infiniteBusy=false;
 let infiniteObserver=null;
 async function advanceInfiniteFeed(){
@@ -1022,7 +1090,7 @@ function installInfiniteFeed(){
  window.addEventListener('resize',()=>advanceInfiniteFeed(),{passive:true});
 }
 
-async function queueBackgroundPrefetch(){
+async async function queueBackgroundPrefetch(){
  if(backgroundBusy)return;
  backgroundBusy=true;
  try{
@@ -1031,7 +1099,7 @@ async function queueBackgroundPrefetch(){
    const total=filtered().filter(x=>ready.has(x.id)).length;
    if(total>=visible+90)break;
    const before=items.length;
-   if(rounds%4===0){await discoverCaptured()}else if(rounds%4===1){await discoverArena()}else if(rounds%4===2){await discoverOpenverse()}else{await discoverMotion()}
+   if(rounds%5===0){await discoverArena()}else if(rounds%5===1){await discoverMuseum()}else if(rounds%5===2){await discoverOpenverse()}else if(rounds%5===3){await discoverMotion()}else{await discoverMuseum()}
    await scheduleValidation();
    if(items.length===before&&rounds>=4)break;
    await new Promise(resolve=>setTimeout(resolve,200));
@@ -1060,30 +1128,25 @@ function updateMoreButton() {
 }
 
 
-$('more').onclick = () => {
-  const previous = visible;
-  const available = filtered().length;
-
-  if (previous >= available) {
-    queueBackgroundPrefetch();
-    return;
+$('more').onclick = async () => {
+ if(loadingMore)return;
+ loadingMore=true;
+ const button=$('more'),old=visible;
+ button.disabled=true;button.textContent='Loading…';
+ try{
+  if(filtered().length<=old){
+   for(let i=0;i<4&&filtered().length<=old;i++){
+    if(i%2===0)await discoverMuseum();
+    else await discoverOpenverse();
+   }
   }
-
-  visible = Math.min(previous + 20, available);
-  render();
-
-  requestAnimationFrame(() => {
-    const next = $('gallery').children[previous];
-    if (next) {
-      next.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  });
-
-  // Préparer de nouvelles sources en arrière-plan.
-  queueBackgroundPrefetch();
+  const available=filtered().length;
+  if(available>old){
+   visible=Math.min(old+20,available);render();
+   requestAnimationFrame(()=>{const next=$('gallery').children[old];if(next)next.scrollIntoView({behavior:'smooth',block:'start'})});
+   queueBackgroundPrefetch();
+  }else button.title='No new designs right now — try again';
+ }finally{loadingMore=false;button.disabled=false;button.textContent='↓';}
 };
 
 $('search').oninput=e=>{query=e.target.value.toLowerCase();visible=20;render();scheduleValidation()};
