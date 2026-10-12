@@ -529,6 +529,193 @@
   }
 }
 
+
+/* V27 — Full-width animated sidebar */
+
+/* Site pleine largeur */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.nav, main, footer {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-left: clamp(18px, 3vw, 64px);
+  padding-right: clamp(18px, 3vw, 64px);
+}
+
+.explore-layout {
+  grid-template-columns: clamp(190px, 17vw, 270px) minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 60px);
+  width: 100%;
+}
+
+.explore-sidebar {
+  position: sticky;
+  top: 28px;
+}
+
+.explore-sidebar .filters-wrap {
+  gap: 22px;
+}
+
+.explore-sidebar .filter-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.explore-sidebar .filters {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+  padding: 4px 0 4px 13px;
+  border-left: 1px solid #dedede;
+}
+
+/* Barre active mobile entre les catégories */
+.explore-sidebar .filters::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 0;
+  width: 3px;
+  height: var(--active-height, 43px);
+  border-radius: 5px;
+  background: #111;
+  transform: translateY(var(--active-y, 4px));
+  transition:
+    transform .55s cubic-bezier(.22,1,.36,1),
+    height .45s cubic-bezier(.22,1,.36,1);
+  z-index: 2;
+}
+
+.explore-sidebar .filters button,
+.explore-sidebar .filters button.active {
+  position: relative;
+  width: 100%;
+  min-height: 43px;
+  margin: 0;
+  padding: 11px 15px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #777;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -.15px;
+  transform: none;
+  animation: sidebar-enter .65s both;
+  transition:
+    color .3s ease,
+    background .3s ease,
+    padding-left .4s cubic-bezier(.22,1,.36,1);
+}
+
+.explore-sidebar .filters button:nth-child(1) { animation-delay: .03s; }
+.explore-sidebar .filters button:nth-child(2) { animation-delay: .07s; }
+.explore-sidebar .filters button:nth-child(3) { animation-delay: .11s; }
+.explore-sidebar .filters button:nth-child(4) { animation-delay: .15s; }
+.explore-sidebar .filters button:nth-child(5) { animation-delay: .19s; }
+.explore-sidebar .filters button:nth-child(6) { animation-delay: .23s; }
+.explore-sidebar .filters button:nth-child(7) { animation-delay: .27s; }
+.explore-sidebar .filters button:nth-child(8) { animation-delay: .31s; }
+
+.explore-sidebar .filters button:hover {
+  color: #111;
+  background: #f0f0f0;
+  padding-left: 22px;
+  transform: none;
+}
+
+.explore-sidebar .filters button.active {
+  color: #111;
+  background: #ededed;
+  font-weight: 700;
+  padding-left: 20px;
+}
+
+@keyframes sidebar-enter {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Animation de la galerie au changement de catégorie */
+#gallery.category-transition {
+  animation: gallery-reveal .48s cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes gallery-reveal {
+  from {
+    opacity: .35;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 800px) {
+  .explore-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .explore-sidebar {
+    position: static;
+  }
+
+  .explore-sidebar .filters {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0;
+    border-left: 0;
+  }
+
+  .explore-sidebar .filters::before {
+    display: none;
+  }
+
+  .explore-sidebar .filters button,
+  .explore-sidebar .filters button.active {
+    width: auto;
+    min-height: 38px;
+    padding: 10px 13px;
+  }
+
+  .explore-sidebar .filters button.active {
+    color: #fff;
+    background: #111;
+  }
+
+  .explore-sidebar .filters button:hover {
+    padding-left: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .explore-sidebar .filters button,
+  .explore-sidebar .filters::before,
+  #gallery.category-transition {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 </style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">THE CREATIVE INDEX <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> BLACK / GREY EDITION</div></section><div class="explore-layout"><aside class="explore-sidebar"><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div></aside><div class="explore-content"><div class="toolbar"><div class="tools"><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option selected" data-sort="new" aria-pressed="true"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option" data-sort="popular" aria-pressed="false"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic grid-mode" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs" hidden>↓</button></div></div><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. Screenshots by screenshotof.com.</footer>
 <dialog id="sponsorDialog"><button class="close" id="closeSponsor">✕</button><h2>Sponsor a design</h2><p>Set your budget. Payments are not enabled yet.</p><label>Website URL<input id="url" type="url" placeholder="https://example.com"></label><label>Budget: <strong id="budgetLabel">$25</strong><input id="budget" type="range" min="1" max="100" value="25"></label><p id="split"></p><button class="dark" id="checkout">Continue to checkout</button><p id="paymentNote">Stripe Connect integration is planned, not active.</p></dialog>
 <span id="count" hidden></span>
@@ -601,7 +788,57 @@ function filtered(){
   }
   return a;
 }
-function filters(){const el=$('filters');el.replaceChildren(...categories.map(c=>{const b=document.createElement('button');b.textContent=c;b.className=category===c?'active':'';b.setAttribute('aria-pressed',String(category===c));b.onclick=()=>{category=c;visible=20;page=1;apiExhausted=false;filters();render();scheduleValidation();queueBackgroundPrefetch()};return b}))}
+function moveCategoryIndicator() {
+  const el = $('filters');
+  const active = el.querySelector('button.active');
+  if (!active) return;
+  el.style.setProperty('--active-y', active.offsetTop + 'px');
+  el.style.setProperty('--active-height', active.offsetHeight + 'px');
+}
+
+function filters() {
+  const el = $('filters');
+  el.replaceChildren(...categories.map(c => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = c;
+    b.className = category === c ? 'active' : '';
+    b.setAttribute('aria-pressed', String(category === c));
+
+    b.onclick = () => {
+      if (category === c) return;
+
+      category = c;
+      visible = 20;
+      page = 1;
+      apiExhausted = false;
+
+      el.querySelectorAll('button').forEach(btn => {
+        const selected = btn.textContent === c;
+        btn.classList.toggle('active', selected);
+        btn.setAttribute('aria-pressed', String(selected));
+      });
+
+      moveCategoryIndicator();
+
+      const gallery = $('gallery');
+      gallery.classList.remove('category-transition');
+      void gallery.offsetWidth;
+      gallery.classList.add('category-transition');
+
+      render();
+      scheduleValidation();
+      queueBackgroundPrefetch();
+    };
+
+    return b;
+  }));
+
+  requestAnimationFrame(moveCategoryIndicator);
+}
+
+window.addEventListener('resize', moveCategoryIndicator);
+
 const cardNodes=new Map();
 function makeCard(x){
  const art=document.createElement('article');art.className='tile';art.dataset.designId=x.id;
