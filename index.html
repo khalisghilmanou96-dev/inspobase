@@ -1,0 +1,167 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>inspoBase — Creative web inspiration</title><style>
+*{box-sizing:border-box}body{margin:0;background:#fafafa;color:#151515;font-family:Arial,Helvetica,sans-serif}header{background:transparent;border-bottom:1px solid #dedede80}.nav,main,footer{max-width:1440px;margin:auto;padding:22px 30px}.nav{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:850;letter-spacing:-2px;font-size:34px;display:inline-flex;align-items:baseline;cursor:default;transform-origin:left center;animation:brand-entrance .8s cubic-bezier(.2,.8,.2,1) both;white-space:nowrap}.brand span{display:inline-block;animation:brand-shade 4.2s ease-in-out 1s infinite}.brand::after{content:"";width:5px;height:5px;background:#171717;border-radius:50%;margin-left:2px;align-self:flex-end;margin-bottom:8px;animation:brand-dot 3s ease-in-out infinite}@keyframes brand-entrance{from{opacity:0;transform:translateY(-12px) scale(.96);filter:blur(4px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}@keyframes brand-shade{0%,100%{color:#888}50%{color:#333}}@keyframes brand-dot{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.5);opacity:1}}@media(prefers-reduced-motion:reduce){.brand,.brand span,.brand::after{animation:none!important}}.brand span{font-weight:400;color:#888}button,input,select{font:inherit;border:1px solid #ddd;background:#fff;color:#151515;padding:11px 15px;border-radius:5px}button{cursor:pointer}.dark{background:#111;color:#fff;border-color:#111}.nav-right{display:flex;gap:8px}h1{font-size:clamp(48px,7.4vw,104px);letter-spacing:-.085em;line-height:.97;margin:24px 0 20px}.hero{position:relative;isolation:isolate;overflow:hidden;padding:48px 0 35px}.hero:before{content:"";position:absolute;z-index:-1;inset:0 0 0 35%;background:linear-gradient(90deg,#fafafa,transparent),url("https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1200&q=65") center/cover;opacity:.14;filter:grayscale(1)}.eyebrow{font-size:11px;font-weight:700;letter-spacing:2px}.intro{font-size:18px;color:#666;max-width:570px;line-height:1.5}.filters{display:flex;flex-wrap:wrap;gap:8px;margin:28px 0}.filters button.active{background:#111;color:#fff}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid #e6e6e6;padding:20px 0}.tools{display:flex;gap:8px;flex-wrap:wrap}.mosaic{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:dense;gap:12px}.tile{min-width:0;position:relative;background:#f1f1f1;overflow:hidden;border-radius:3px;aspect-ratio:1/1}.tile.wide{grid-column:span 2;aspect-ratio:2/1}.tile.tall{grid-row:span 2;aspect-ratio:auto}.tile a{display:block;width:100%;height:100%;color:inherit}.tile img{width:100%;height:100%;object-fit:cover;display:block}.tile .overlay{position:absolute;bottom:0;left:0;right:0;padding:24px 14px 12px;background:linear-gradient(transparent,#000a);color:white;opacity:0;transition:opacity .15s}.tile:hover .overlay{opacity:1}.tile strong{display:block}.tile small{opacity:.8}/* Asymmetric canvas-style editorial grid with deliberately varied tile sizes. */
+.grid-mode{grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:clamp(100px,10vw,180px);grid-auto-flow:dense;gap:10px}
+.grid-mode .tile,.grid-mode .tile.wide,.grid-mode .tile.tall{grid-column:span 1;grid-row:span 2;aspect-ratio:auto;min-height:0}
+.grid-mode .tile.size-wide{grid-column:span 2;grid-row:span 2}
+.grid-mode .tile.size-tall{grid-column:span 1;grid-row:span 3}
+.grid-mode .tile.size-feature{grid-column:span 2;grid-row:span 3}
+.grid-mode .tile.size-small{grid-column:span 1;grid-row:span 1}
+.grid-mode .tile img{object-fit:cover;transition:transform .45s ease}
+.grid-mode .tile:hover img{transform:scale(1.035)}
+.grid-mode .overlay{opacity:0}.grid-mode .tile:hover .overlay{opacity:1}.down{display:block;margin:34px auto 0;background:transparent;border:0;font-size:36px;font-weight:200;line-height:1;width:64px;height:64px}.down:hover{transform:translateY(4px)}.down[hidden]{display:none}.status{text-align:center;color:#777;font-size:12px;min-height:25px;margin:0 0 25px}footer{margin-top:45px;background:transparent;border-top:1px solid #ddd6;color:#888;font-size:12px}dialog{border:0;border-radius:10px;padding:28px;max-width:430px;width:90vw}dialog::backdrop{background:#0008}dialog input{width:100%;margin:8px 0 16px}dialog input[type=range]{padding:0}dialog .dark{width:100%;margin-top:12px}dialog p{color:#666;font-size:13px;line-height:1.5}.close{float:right}@media(max-width:700px){.nav,main,footer{padding:17px}.mosaic,.grid-mode{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.grid-mode{grid-auto-rows:110px}.grid-mode .tile.size-feature{grid-column:span 2;grid-row:span 3}.grid-mode .tile.size-wide{grid-column:span 2;grid-row:span 2}.tile.wide{grid-column:span 2}.tile.tall{grid-row:auto;aspect-ratio:1}.hero{padding-top:35px}.nav-right button{padding:9px;font-size:12px}.toolbar input{max-width:155px}}@media(max-width:400px){.mosaic,.grid-mode{grid-template-columns:1fr}.grid-mode{grid-auto-rows:130px}.grid-mode .tile,.grid-mode .tile.size-feature,.grid-mode .tile.size-wide,.grid-mode .tile.size-tall,.grid-mode .tile.size-small{grid-column:span 1;grid-row:span 2}.grid-mode .tile.size-tall,.grid-mode .tile.size-feature{grid-row:span 3}.tile.wide{grid-column:auto;aspect-ratio:1}.tile.tall{aspect-ratio:1}}
+
+/* V10 — editorial black/graphite identity */
+.hero{padding:62px 0 56px;min-height:345px;border-bottom:1px solid #e8e8e8}
+.hero:before{opacity:.10;filter:grayscale(1) contrast(1.1)}
+.hero:after{content:'IB / 001';position:absolute;right:18px;top:24px;font-size:12px;font-weight:700;letter-spacing:.22em;color:#a5a5a5}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;color:#303030;letter-spacing:.22em;font-size:12px}
+.eyebrow:before{content:'';width:25px;height:2px;background:#1a1a1a}
+.eyebrow .muted{color:#999;font-weight:500}
+.hero h1{font-weight:850;color:#0d0d0d;text-shadow:0 1px 0 #fff;line-height:1.01}
+.hero h1 .grey{color:#929292;font-weight:450}
+.intro{color:#555;font-weight:400;max-width:550px}
+.hero .edition{display:flex;gap:18px;align-items:center;color:#8c8c8c;letter-spacing:.16em;font-size:10px;font-weight:700;margin-top:25px}
+.hero .edition:before{content:'';display:block;width:45px;height:1px;background:#aaa}
+.filters-wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin:26px 0 23px}
+.filter-label{color:#858585;font-size:10px;letter-spacing:.2em;font-weight:800;white-space:nowrap}
+.filters{display:flex;gap:3px;flex-wrap:wrap;margin:0;background:#eeeeee;border:1px solid #e5e5e5;padding:5px;border-radius:11px;box-shadow:inset 0 1px 3px #00000008}
+.filters button{position:relative;border:0;background:transparent;border-radius:7px;padding:12px 19px;font-size:12px;font-weight:700;letter-spacing:.01em;color:#777;transition:background .25s,color .25s,transform .25s,box-shadow .25s}
+.filters button:hover{color:#171717;background:#ffffffa0;transform:translateY(-1px)}
+.filters button.active{background:#191919;color:#fff;box-shadow:0 3px 12px #00000022;animation:categoryEnter .3s cubic-bezier(.2,.8,.2,1)}
+.filters button:focus-visible{outline:2px solid #555;outline-offset:3px}
+@keyframes categoryEnter{from{transform:scale(.92);opacity:.7}to{transform:scale(1);opacity:1}}
+@media(max-width:700px){.hero{padding:42px 0 40px;min-height:auto}.filters-wrap{gap:11px}.filters{width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}.filters button{white-space:nowrap;padding:11px 14px}.hero:after{right:0;top:15px}}
+@media(prefers-reduced-motion:reduce){.filters button,.filters button.active{animation:none;transition:none}}
+.animated-design .motion-tag{position:absolute;z-index:1;top:12px;right:12px;background:#111;color:white;font-size:10px;font-weight:800;letter-spacing:1.4px;padding:7px 9px;border-radius:2px}.animated-design img,.animated-design video{object-fit:cover;width:100%;height:100%;display:block}@media(prefers-reduced-motion:reduce){.tile img{animation:none!important;transition:none!important}}.sort-switch{display:flex;align-items:center;gap:3px;background:#eaeaea;border:1px solid #dcdcdc;padding:5px;border-radius:13px}.sort-label{font-size:9px;letter-spacing:.14em;color:#888;font-weight:800;padding:0 11px}.sort-option{border:0;background:transparent;color:#777;border-radius:9px;padding:10px 15px;font-size:12px;font-weight:800;letter-spacing:.015em;transition:background .25s,color .25s,box-shadow .25s}.sort-option.selected{background:#181818;color:white;box-shadow:0 4px 12px #0002}.sort-option:hover:not(.selected){background:white;color:#171717}.sort-symbol{font-size:14px;margin-right:4px}.status[hidden]{display:none}.down{border:1px solid #dedede;border-radius:50%;background:white;box-shadow:0 4px 24px #0000000a;transition:transform .2s,box-shadow .2s}.down:hover{box-shadow:0 8px 30px #00000014}@media(max-width:700px){.sort-label{display:none}.sort-option{padding:10px}}
+</style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button id="login">Sign in</button><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">THE CREATIVE INDEX <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> BLACK / GREY EDITION</div></section><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div><div class="toolbar"><strong id="count">Discover designs</strong><div class="tools"><button id="view">Grid view</button><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option selected" data-sort="new" aria-pressed="true"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option" data-sort="popular" aria-pressed="false"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs">↓</button><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. Screenshots by screenshotof.com.</footer>
+<dialog id="sponsorDialog"><button class="close" id="closeSponsor">✕</button><h2>Sponsor a design</h2><p>Set your budget. Payments are not enabled yet.</p><label>Website URL<input id="url" type="url" placeholder="https://example.com"></label><label>Budget: <strong id="budgetLabel">$25</strong><input id="budget" type="range" min="1" max="100" value="25"></label><p id="split"></p><button class="dark" id="checkout">Continue to checkout</button><p id="paymentNote">Stripe Connect integration is planned, not active.</p></dialog><dialog id="loginDialog"><button class="close" id="closeLogin">✕</button><h2>Sign in</h2><p>Account registration will be available after authentication is configured.</p><input type="email" placeholder="you@example.com"><button class="dark" id="auth">Continue</button><p id="authNote"></p></dialog>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const categories=['All','Design','Marketing','Agency','Productivity','Social','Branding','UI / Product'];
+let category='All',query='',sort='new',canvas=true,visible=30,items=[],fetching=false,page=1,apiExhausted=false;let commonsPage=0,openversePage=1;const sourcePages=new Map();const inFlight=new Set();let validationPromise=null;let backgroundBusy=false;let activeSource=0;
+const screenshot=domain=>'https://screenshotof.com/'+encodeURIComponent(domain)+'?s=512';
+const seeds=[
+['Linear','linear.app','UI / Product'],['Stripe','stripe.com','UI / Product'],['Framer','framer.com','Websites'],['Vercel','vercel.com','UI / Product'],['Figma','figma.com','UI / Product'],['Webflow','webflow.com','Websites'],['Readymag','readymag.com','Websites'],['Awwwards','awwwards.com','Websites'],['Resend','resend.com','UI / Product'],['Raycast','raycast.com','UI / Product'],['Notion','notion.so','UI / Product'],['Arc','arc.net','UI / Product'],['Pitch','pitch.com','UI / Product'],['Layers','layers.to','Portfolios'],['Contra','contra.com','Portfolios'],['Spline','spline.design','Websites'],['Lusion','lusion.co','Studios'],['Locomotive','locomotive.ca','Studios'],['Active Theory','activetheory.com','Studios'],['BASIC/DEPT','basicagency.com','Studios'],['Instrument','instrument.com','Studios'],['Pentagram','pentagram.com','Studios'],['Collins','wearecollins.com','Studios'],['Buck','buck.co','Studios'],['Ordinary Folk','ordinaryfolk.co','Studios'],['Build in Amsterdam','buildinamsterdam.com','Studios'],['Motto','wearemotto.com','Studios'],['Hello Monday','hellomonday.com','Studios'],['Ueno','ueno.co','Studios'],['Fantasy','fantasy.co','Studios'],['Monograph','monograph.com','UI / Product'],['Tally','tally.so','UI / Product'],['Attio','attio.com','UI / Product'],['Lemon Squeezy','lemonsqueezy.com','UI / Product'],['Superlist','superlist.com','UI / Product'],['Craft','craft.do','UI / Product'],['Miro','miro.com','UI / Product'],['Rive','rive.app','Websites'],['GSAP','gsap.com','Websites'],['Panic','panic.com','Websites'],['Gumroad','gumroad.com','Websites'],['Dribbble','dribbble.com','Portfolios'],['Behance','behance.net','Portfolios'],['Cargo','cargo.site','Portfolios'],['Semplice','semplice.com','Portfolios'],['Format','format.com','Portfolios'],['Adobe Portfolio','portfolio.adobe.com','Portfolios'],['Godly','godly.website','Websites'],['Siteinspire','siteinspire.com','Websites'],['Minimal Gallery','minimal.gallery','Websites'],['Land-book','land-book.com','Websites'],['Mobbin','mobbin.com','UI / Product'],['Page Flows','pageflows.com','UI / Product'],['UI8','ui8.net','UI / Product'],['Designspiration','designspiration.com','Portfolios'],['A24','a24films.com','Websites'],['Apple','apple.com','Websites'],['Nothing','nothing.tech','Websites'],['Teenage Engineering','teenage.engineering','Websites'],['Are.na','are.na','Portfolios']
+];
+function makeItem(name,domain,cat,i){return {id:domain,name,domain,cat,url:'https://'+domain,src:screenshot(domain),score:1000-i,date:1000-i,loaded:false}}
+const marketingDomains=new Set(['stripe.com','webflow.com','readymag.com','resend.com','pitch.com','contra.com','gumroad.com','tally.so','lemonsqueezy.com','a24films.com','apple.com','nothing.tech','teenage.engineering','godly.website','siteinspire.com','land-book.com']);
+const productivityDomains=new Set(['notion.so','linear.app','superlist.com','craft.do','miro.com','tally.so','attio.com','pitch.com','raycast.com']);
+const socialDomains=new Set(['are.na','layers.to','dribbble.com','behance.net','contra.com','gumroad.com']);
+const brandingDomains=new Set(['pentagram.com','wearecollins.com','buck.co','wearemotto.com','basicagency.com','ordinaryfolk.co','nothing.tech','teenage.engineering']);
+function seedCategory(s){const domain=s[1];return productivityDomains.has(domain)?'Productivity':socialDomains.has(domain)?'Social':brandingDomains.has(domain)?'Branding':s[2]==='Studios'?'Agency':marketingDomains.has(domain)?'Marketing':s[2]==='UI / Product'?'UI / Product':'Design'}
+items=seeds.filter(s=>!['ueno.co','fantasy.co','pageflows.com','minimal.gallery','godly.website','format.com','arc.net'].includes(s[1])).map((s,i)=>makeItem(s[0],s[1],seedCategory(s),i));
+// Fetch validated screenshots from the optional self-hosted backend.
+let serverOffset=0,serverTotal=0,serverLoading=false;
+async function discoverCaptured(){
+ if(serverLoading||serverTotal&&serverOffset>=serverTotal)return 0;
+ serverLoading=true;
+ try{
+  const r=await fetch('/api/designs?offset='+serverOffset+'&limit=120',{signal:AbortSignal.timeout(7000)});
+  if(!r.ok)return 0;
+  const data=await r.json();serverTotal=data.total||0;const batch=data.items||[];
+  const ids=new Set(items.map(x=>x.id));let added=0;
+  for(const x of batch){if(ids.has(x.id))continue;items.push({...x,animated:false});ids.add(x.id);added++}
+  serverOffset+=batch.length;render();scheduleValidation();return added;
+ }catch{return 0}finally{serverLoading=false}
+}
+const checked=new Map();const ready=new Set();const failed=new Set();let validationRunning=false;
+function checkImage(src,timeout=8500){if(checked.has(src))return checked.get(src);let promise=new Promise(resolve=>{const img=new Image();let settled=false;const t=setTimeout(()=>finish(false),timeout);function finish(ok){if(settled)return;settled=true;clearTimeout(t);resolve(ok)}img.onload=()=>finish(img.naturalWidth>0);img.onerror=()=>finish(false);img.src=src;if(img.complete&&img.naturalWidth)finish(true)});checked.set(src,promise);return promise}
+function filtered(){let a=items.filter(x=>(category==='All'||x.cat===category)&&(x.name+' '+x.domain).toLowerCase().includes(query));a.sort((x,y)=>sort==='popular'?y.score-x.score:y.date-x.date);return a}
+function filters(){const el=$('filters');el.replaceChildren(...categories.map(c=>{const b=document.createElement('button');b.textContent=c;b.className=category===c?'active':'';b.setAttribute('aria-pressed',String(category===c));b.onclick=()=>{category=c;visible=30;page=1;apiExhausted=false;filters();render();scheduleValidation();queueBackgroundPrefetch()};return b}))}
+const cardNodes=new Map();
+function makeCard(x){
+ const art=document.createElement('article');art.className='tile';art.dataset.designId=x.id;
+ const a=document.createElement('a');a.href=x.url;a.target='_blank';a.rel='noopener noreferrer';a.title='Visit '+x.name;
+ let img;if(x.animated&&/\.(mp4|webm)(?:\?|$)/i.test(x.src)){img=document.createElement('video');img.src=x.src;img.autoplay=true;img.loop=true;img.muted=true;img.playsInline=true;img.preload='auto';img.play().catch(()=>{});}else{img=document.createElement('img');img.alt='Preview: '+x.name;img.src=x.src;img.loading=x.animated?'eager':'lazy';img.decoding='async';}
+ if(x.animated){art.classList.add('animated-design');const flag=document.createElement('span');flag.className='motion-tag';flag.textContent='▶ LOOP';art.append(flag)}
+ img.onerror=()=>{failed.add(x.id);ready.delete(x.id);cardNodes.delete(x.id);render()};
+ const overlay=document.createElement('div');overlay.className='overlay';const name=document.createElement('strong');name.textContent=x.name;const host=document.createElement('small');host.textContent=x.domain;overlay.append(name,host);a.append(img,overlay);art.append(a);return art;
+}
+function render(){
+ const list=filtered().filter(x=>ready.has(x.id));const cards=list.slice(0,visible);
+ $('count').textContent=`${cards.length} verified designs`;
+ const gallery=$('gallery');const wanted=new Set(cards.map(x=>x.id));
+ // Remove only cards no longer in the current view; preserve DOM for ongoing GIF playback.
+ for(const node of Array.from(gallery.children))if(!wanted.has(node.dataset.designId))node.remove();
+ cards.forEach((x,i)=>{
+  let art=cardNodes.get(x.id);if(!art){art=makeCard(x);cardNodes.set(x.id,art)}
+  const shape=canvas?(i%11===3?' wide':i%13===7?' tall':''):' '+(['size-feature','size-small','size-tall','size-wide','size-small','size-wide','size-tall','size-small','size-wide','size-feature','size-small','size-tall'][i%12]);
+  art.className='tile'+shape+(x.animated?' animated-design':'');
+  if(gallery.children[i]!==art)gallery.insertBefore(art,gallery.children[i]||null);
+ });
+ $('more').hidden=false;$('more').disabled=false;
+}
+async function scheduleValidation(){
+ if(validationRunning)return validationPromise;validationRunning=true;
+ // Work on the visible category first, with limited concurrency and a short timeout.
+ const candidates=filtered().filter(x=>!ready.has(x.id)&&!failed.has(x.id)).slice(0,180);
+ let index=0;const workers=Array.from({length:12},async()=>{while(index<candidates.length){const x=candidates[index++];const ok=await checkImage(x.src,4500);if(ok)ready.add(x.id);else failed.add(x.id);if(ready.size%12===0)render()}});
+ validationPromise=Promise.all(workers);await validationPromise;validationRunning=false;render();
+ const count=filtered().filter(x=>ready.has(x.id)).length;
+ $('status').textContent='';
+}
+
+// Additional public no-key APIs: Openverse for graphic design imagery and Wikimedia Commons for animated GIFs.
+const graphicQueries={All:'graphic design',Design:'graphic design poster',Marketing:'advertising poster design',Agency:'creative studio identity',Productivity:'interface design',Social:'social media graphic design',Branding:'brand identity typography','UI / Product':'user interface design'};
+async function discoverOpenverse(){
+ const chosen=category,queryTerm=graphicQueries[chosen]||'graphic design';const pageKey='openverse:'+chosen;const nextPage=sourcePages.get(pageKey)||1;
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
+ try{
+ const url='https://api.openverse.org/v1/images/?q='+encodeURIComponent(queryTerm)+'&page_size=40&page='+nextPage+'&license_type=commercial';
+ const r=await fetch(url,{signal:controller.signal});if(!r.ok)throw Error('Openverse '+r.status);
+ const data=await r.json(),seen=new Set(items.map(x=>x.id));let added=0;
+ for(const photo of data.results||[]){
+  const source=photo.thumbnail||photo.url;if(!source||!photo.foreign_landing_url||!photo.id)continue;
+  const id='openverse-'+photo.id;if(seen.has(id))continue;seen.add(id);
+  items.push({id,name:(photo.title||'Visual inspiration').slice(0,80),domain:photo.creator||'Openverse',cat:chosen==='All'?'Design':chosen,url:photo.foreign_landing_url,src:source,score:15,date:Date.now()-added,animated:false,source:'Openverse'});added++;
+ }
+ sourcePages.set(pageKey,nextPage+1);render();scheduleValidation();return added;
+ }catch(e){return 0}finally{clearTimeout(timer)}
+}
+async function discoverMotion(){
+ const chosen=category;const pageKey='commons:'+chosen;const continuation=sourcePages.get(pageKey)||null;
+ const searchTerms={All:'animated graphic design gif',Design:'animated typography gif',Marketing:'animated advertisement gif',Agency:'motion graphics gif',Productivity:'animated interface gif',Social:'animated social media gif',Branding:'animated logo gif','UI / Product':'animated user interface gif'};
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
+ try{
+ const q=new URLSearchParams({action:'query',generator:'search',gsrsearch:'filetype:gif '+searchTerms[chosen],gsrnamespace:'6',gsrlimit:'50',prop:'imageinfo',iiprop:'url|mime|size',format:'json',origin:'*'});
+ if(continuation)q.set('gsroffset',String(continuation));
+ const r=await fetch('https://commons.wikimedia.org/w/api.php?'+q,{signal:controller.signal});if(!r.ok)throw Error('Commons '+r.status);
+ const data=await r.json(),seen=new Set(items.map(x=>x.id));let added=0;
+ for(const page of Object.values(data.query?.pages||{})){
+  const info=page.imageinfo?.[0];if(!info?.url||info.mime!=='image/gif'||(info.size||0)>6500000||/logo|flag|icon|button|loading|spinner/i.test(page.title))continue;
+  const id='commons-'+page.pageid;if(seen.has(id))continue;seen.add(id);
+  items.push({id,name:page.title.replace(/^File:/,'').replace(/\.gif$/i,'').replace(/_/g,' ').slice(0,90),domain:'Wikimedia Commons',cat:chosen==='All'?'Design':chosen,url:info.descriptionurl||'https://commons.wikimedia.org/wiki/'+encodeURIComponent(page.title),src:info.url,score:80,date:Date.now()-added,animated:true,source:'Wikimedia Commons'});added++;
+ }
+ sourcePages.set(pageKey,data.continue?.gsroffset||((continuation||0)+50));render();scheduleValidation();return added;
+ }catch(e){return 0}finally{clearTimeout(timer)}
+}
+
+// Prefetch in the background: a click on the arrow only reveals already-validated items.
+// No server is bundled; this is browser-side prefetch with a bounded queue.
+async function queueBackgroundPrefetch(){
+ if(backgroundBusy)return;
+ backgroundBusy=true;
+ try{
+  let rounds=0;
+  while(rounds++<5){
+   const total=filtered().filter(x=>ready.has(x.id)).length;
+   if(total>=visible+90)break;
+   const before=items.length;
+   if(rounds%3===0){await discoverCaptured()}else if(rounds%2){await discoverMotion()}else{await discoverOpenverse()}
+   await scheduleValidation();
+   if(items.length===before&&rounds>=4)break;
+   await new Promise(resolve=>setTimeout(resolve,200));
+  }
+ }finally{backgroundBusy=false}
+}
+async function discover(){return 0} // GitHub repository search disabled: homepages were often broken or irrelevant.
+$('more').onclick=()=>{let previous=visible;visible+=30;render();queueBackgroundPrefetch();requestAnimationFrame(()=>{const children=$('gallery').children;if(children[previous])children[previous].scrollIntoView({behavior:'smooth',block:'start'})})};
+$('view').onclick=()=>{canvas=!canvas;$('gallery').classList.toggle('grid-mode',!canvas);$('view').textContent=canvas?'Grid view':'Canvas view';render()};
+$('search').oninput=e=>{query=e.target.value.toLowerCase();visible=30;render();scheduleValidation()};
+document.querySelectorAll('.sort-option').forEach(button=>button.onclick=()=>{sort=button.dataset.sort;document.querySelectorAll('.sort-option').forEach(b=>{const selected=b===button;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',String(selected))});render()});
+$('sponsor').onclick=()=>$('sponsorDialog').showModal();$('login').onclick=()=>$('loginDialog').showModal();$('closeSponsor').onclick=()=>$('sponsorDialog').close();$('closeLogin').onclick=()=>$('loginDialog').close();
+$('budget').oninput=()=>{let v=Number($('budget').value);$('budgetLabel').textContent='$'+v;$('split').textContent='Platform fee (5%): $'+(v*.05).toFixed(2)+' · Connected account: $'+(v*.95).toFixed(2)};$('budget').oninput();
+$('checkout').onclick=()=>$('paymentNote').textContent='Payments are not configured. No charge was made.';$('auth').onclick=()=>$('authNote').textContent='Authentication is not configured yet.';
+filters();render();$('status').textContent='';discoverCaptured().then(()=>queueBackgroundPrefetch());scheduleValidation();
+</script></body></html>
