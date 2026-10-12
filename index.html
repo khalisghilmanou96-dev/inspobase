@@ -728,6 +728,10 @@ html, body {
   }
 }
 
+
+/* V31 infinite feed */
+#infinite-sentinel{height:1px;width:100%;pointer-events:none}
+@media(prefers-reduced-motion:reduce){#gallery.category-transition{animation:none!important}}
 </style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">INSPOBASE <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> DESIGN SELECTION</div></section><div class="explore-layout"><aside class="explore-sidebar"><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div></aside><div class="explore-content"><div class="toolbar"><div class="tools"><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option selected" data-sort="new" aria-pressed="true"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option" data-sort="popular" aria-pressed="false"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic grid-mode" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs" hidden>↓</button></div></div><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. </footer>
 <dialog id="sponsorDialog"><button class="close" id="closeSponsor">✕</button><h2>Sponsor a design</h2><label>Website URL<input id="url" type="url" placeholder="https://example.com"></label><label>Budget: <strong id="budgetLabel">$25</strong><input id="budget" type="range" min="1" max="100" value="25"></label><p id="split"></p><button class="dark" id="checkout">Continue to checkout</button><p id="paymentNote">Stripe Connect integration is planned, not active.</p></dialog>
 <span id="count" hidden></span>
@@ -942,6 +946,82 @@ async function discoverMotion(){
 
 // Prefetch in the background: a click on the arrow only reveals already-validated items.
 // No server is bundled; this is browser-side prefetch with a bounded queue.
+// INFINITE_FEED_V31 — Public creative sources + automatic infinite scrolling.
+const arenaChannels=['graphic-design','visual-identity','web-design','typography','branding','design-inspiration'];
+let arenaChannelIndex=0;
+const arenaSeen=new Set();
+const arenaNext=new Map();
+let arenaBusy=false;
+async function discoverArena(){
+ if(arenaBusy)return 0;
+ arenaBusy=true;
+ try{
+  const slug=arenaChannels[arenaChannelIndex++%arenaChannels.length];
+  const next=arenaNext.get(slug)||1;
+  if(next===-1)return 0;
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),8500);
+  try{
+   const response=await fetch('https://api.are.na/v3/channels/'+encodeURIComponent(slug)+'/contents?per=40&page='+next,{signal:controller.signal});
+   if(!response.ok){arenaNext.set(slug,-1);return 0}
+   const json=await response.json();
+   const blocks=Array.isArray(json.data)?json.data:Array.isArray(json.contents)?json.contents:[];
+   let added=0;
+   for(const block of blocks){
+    const image=block.image?.display?.url||block.image?.large?.url||block.image?.original?.url||block.image?.url;
+    const destination=block.source?.url||block.url||block.classic_url;
+    const id='arena-'+block.id;
+    if(!image||!destination||!block.id||arenaSeen.has(id)||items.some(x=>x.id===id))continue;
+    arenaSeen.add(id);
+    const title=(block.title||block.generated_title||'Creative reference').slice(0,90);
+    const chosen=category;
+    const lower=(title+' '+slug).toLowerCase();
+    const cat=chosen!=='All'?chosen:/brand|identity|logo/.test(lower)?'Branding':/typograph/.test(lower)?'Design':/web|interface|ui/.test(lower)?'UI / Product':'Design';
+    items.push({id,name:title,domain:'Are.na',cat,url:destination,src:image,score:35,date:Date.now()-added,animated:false,source:'Are.na'});
+    added++;
+   }
+   const pagination=json.meta||json.pagination||{};
+   arenaNext.set(slug,pagination.has_more===false||blocks.length===0?-1:next+1);
+   if(added){render();scheduleValidation()}
+   return added;
+  }finally{clearTimeout(timer)}
+ }catch(error){return 0}finally{arenaBusy=false}
+}
+
+let infiniteBusy=false;
+let infiniteObserver=null;
+async function advanceInfiniteFeed(){
+ if(infiniteBusy||document.hidden||query.trim())return;
+ const gallery=$('gallery');
+ if(!gallery||!gallery.children.length)return;
+ const bottom=gallery.getBoundingClientRect().bottom;
+ if(bottom>window.innerHeight+1100)return;
+ infiniteBusy=true;
+ try{
+  let available=filtered().length;
+  if(available<=visible){
+   queueBackgroundPrefetch();
+   await Promise.race([new Promise(resolve=>setTimeout(resolve,1700)),new Promise(resolve=>{const check=setInterval(()=>{if(filtered().length>available){clearInterval(check);resolve()}},200);setTimeout(()=>{clearInterval(check);resolve()},1600)})]);
+   available=filtered().length;
+  }
+  if(available>visible){visible=Math.min(visible+20,available);render();queueBackgroundPrefetch()}
+ }finally{infiniteBusy=false}
+}
+function installInfiniteFeed(){
+ const gallery=$('gallery');
+ if(!gallery)return;
+ if('IntersectionObserver' in window){
+  const sentinel=document.createElement('div');
+  sentinel.id='infinite-sentinel';
+  sentinel.setAttribute('aria-hidden','true');
+  gallery.insertAdjacentElement('afterend',sentinel);
+  infiniteObserver=new IntersectionObserver(()=>advanceInfiniteFeed(),{rootMargin:'1100px 0px'});
+  infiniteObserver.observe(sentinel);
+ }
+ window.addEventListener('scroll',()=>advanceInfiniteFeed(),{passive:true});
+ window.addEventListener('resize',()=>advanceInfiniteFeed(),{passive:true});
+}
+
 async function queueBackgroundPrefetch(){
  if(backgroundBusy)return;
  backgroundBusy=true;
@@ -951,7 +1031,7 @@ async function queueBackgroundPrefetch(){
    const total=filtered().filter(x=>ready.has(x.id)).length;
    if(total>=visible+90)break;
    const before=items.length;
-   if(rounds%3===0){await discoverCaptured()}else if(rounds%2){await discoverMotion()}else{await discoverOpenverse()}
+   if(rounds%4===0){await discoverCaptured()}else if(rounds%4===1){await discoverArena()}else if(rounds%4===2){await discoverOpenverse()}else{await discoverMotion()}
    await scheduleValidation();
    if(items.length===before&&rounds>=4)break;
    await new Promise(resolve=>setTimeout(resolve,200));
@@ -1025,5 +1105,6 @@ filters();
 visible=20;
 render();
 preloadInitialTwenty();
+installInfiniteFeed();
 $('status').textContent='';scheduleValidation().then(()=>queueBackgroundPrefetch());discoverCaptured();
 </script></body></html>
