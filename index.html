@@ -33,7 +33,33 @@
 @media(max-width:700px){.hero{padding:42px 0 40px;min-height:auto}.filters-wrap{gap:11px}.filters{width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}.filters button{white-space:nowrap;padding:11px 14px}.hero:after{right:0;top:15px}}
 @media(prefers-reduced-motion:reduce){.filters button,.filters button.active{animation:none;transition:none}}
 .animated-design .motion-tag{position:absolute;z-index:1;top:12px;right:12px;background:#111;color:white;font-size:10px;font-weight:800;letter-spacing:1.4px;padding:7px 9px;border-radius:2px}.animated-design img,.animated-design video{object-fit:cover;width:100%;height:100%;display:block}@media(prefers-reduced-motion:reduce){.tile img{animation:none!important;transition:none!important}}.sort-switch{display:flex;align-items:center;gap:3px;background:#eaeaea;border:1px solid #dcdcdc;padding:5px;border-radius:13px}.sort-label{font-size:9px;letter-spacing:.14em;color:#888;font-weight:800;padding:0 11px}.sort-option{border:0;background:transparent;color:#777;border-radius:9px;padding:10px 15px;font-size:12px;font-weight:800;letter-spacing:.015em;transition:background .25s,color .25s,box-shadow .25s}.sort-option.selected{background:#181818;color:white;box-shadow:0 4px 12px #0002}.sort-option:hover:not(.selected){background:white;color:#171717}.sort-symbol{font-size:14px;margin-right:4px}.status[hidden]{display:none}.down{border:1px solid #dedede;border-radius:50%;background:white;box-shadow:0 4px 24px #0000000a;transition:transform .2s,box-shadow .2s}.down:hover{box-shadow:0 8px 30px #00000014}@media(max-width:700px){.sort-label{display:none}.sort-option{padding:10px}}
-#count{display:none!important}#count{display:none!important}</style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button id="login">Sign in</button><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">THE CREATIVE INDEX <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> BLACK / GREY EDITION</div></section><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div><div class="toolbar"><strong id="count">Discover designs</strong><div class="tools"><button id="view">Grid view</button><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option selected" data-sort="new" aria-pressed="true"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option" data-sort="popular" aria-pressed="false"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs">↓</button><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. Screenshots by screenshotof.com.</footer>
+#count{display:none!important}#count{display:none!important}
+/* Floating load-more arrow — inspoBase */
+#more {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline-offset: 8px;
+  padding: 14px 24px !important;
+  color: #171717 !important;
+  transition: transform .3s ease, opacity .3s ease;
+}
+
+#more:hover {
+  background: transparent !important;
+  transform: translateY(7px);
+  opacity: .55;
+}
+
+#more:focus-visible {
+  outline: 2px solid #171717;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #more { transition: none !important; }
+}
+</style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button id="login">Sign in</button><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">THE CREATIVE INDEX <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> BLACK / GREY EDITION</div></section><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div><div class="toolbar"><strong id="count">Discover designs</strong><div class="tools"><button id="view">Grid view</button><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option selected" data-sort="new" aria-pressed="true"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option" data-sort="popular" aria-pressed="false"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs">↓</button><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. Screenshots by screenshotof.com.</footer>
 <dialog id="sponsorDialog"><button class="close" id="closeSponsor">✕</button><h2>Sponsor a design</h2><p>Set your budget. Payments are not enabled yet.</p><label>Website URL<input id="url" type="url" placeholder="https://example.com"></label><label>Budget: <strong id="budgetLabel">$25</strong><input id="budget" type="range" min="1" max="100" value="25"></label><p id="split"></p><button class="dark" id="checkout">Continue to checkout</button><p id="paymentNote">Stripe Connect integration is planned, not active.</p></dialog><dialog id="loginDialog"><button class="close" id="closeLogin">✕</button><h2>Sign in</h2><p>Account registration will be available after authentication is configured.</p><input type="email" placeholder="you@example.com"><button class="dark" id="auth">Continue</button><p id="authNote"></p></dialog>
 <script>
 'use strict';
