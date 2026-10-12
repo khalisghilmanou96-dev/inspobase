@@ -1022,7 +1022,7 @@ function installInfiniteFeed(){
  window.addEventListener('resize',()=>advanceInfiniteFeed(),{passive:true});
 }
 
-async function queueBackgroundPrefetch(){
+async async function queueBackgroundPrefetch(){
  if(backgroundBusy)return;
  backgroundBusy=true;
  try{
@@ -1060,30 +1060,64 @@ function updateMoreButton() {
 }
 
 
-$('more').onclick = () => {
+
+$('more').onclick = async () => {
+  if (loadingMore) return;
+  loadingMore = true;
+
+  const button = $('more');
   const previous = visible;
-  const available = filtered().length;
 
-  if (previous >= available) {
-    queueBackgroundPrefetch();
-    return;
-  }
+  button.disabled = true;
+  button.textContent = 'Loading…';
 
-  visible = Math.min(previous + 20, available);
-  render();
+  try {
+    let available = filtered().length;
 
-  requestAnimationFrame(() => {
-    const next = $('gallery').children[previous];
-    if (next) {
-      next.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
+    if (available <= previous) {
+      await queueBackgroundPrefetch();
+
+      if (filtered().length <= previous) {
+        const chosen = category;
+        await Promise.allSettled([
+          discoverArena(),
+          discoverOpenverse(),
+          discoverMotion()
+        ]);
+      }
+
+      available = filtered().length;
     }
-  });
 
-  // Préparer de nouvelles sources en arrière-plan.
-  queueBackgroundPrefetch();
+    if (available > previous) {
+      visible = Math.min(previous + 20, available);
+      render();
+
+      requestAnimationFrame(() => {
+        const next = $('gallery').children[previous];
+        if (next) {
+          next.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+
+      queueBackgroundPrefetch();
+    } else {
+      button.textContent = 'Try again ↓';
+    }
+  } catch (error) {
+    console.warn('Additional designs unavailable:', error);
+    button.textContent = 'Try again ↓';
+  } finally {
+    loadingMore = false;
+    button.disabled = false;
+
+    if (visible > previous) {
+      button.textContent = '↓';
+    }
+  }
 };
 
 $('search').oninput=e=>{query=e.target.value.toLowerCase();visible=20;render();scheduleValidation()};
