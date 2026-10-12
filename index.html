@@ -367,14 +367,35 @@
   .tile::before { animation: none; }
 }
 
+
+/* inspoBase — Gallery 20 per page V20 */
+#gallery:empty {
+  min-height: 0;
+}
+#gallery .tile {
+  background: #ececec;
+}
+#gallery .tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#more {
+  margin: 36px auto 54px;
+}
+#more[hidden] {
+  display: none !important;
+}
+
 </style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button id="login">Sign in</button><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">THE CREATIVE INDEX <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> BLACK / GREY EDITION</div></section><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div><div class="toolbar"><div class="tools"><button id="view">Grid view</button><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option selected" data-sort="new" aria-pressed="true"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option" data-sort="popular" aria-pressed="false"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs">↓</button><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. Screenshots by screenshotof.com.</footer>
 <dialog id="sponsorDialog"><button class="close" id="closeSponsor">✕</button><h2>Sponsor a design</h2><p>Set your budget. Payments are not enabled yet.</p><label>Website URL<input id="url" type="url" placeholder="https://example.com"></label><label>Budget: <strong id="budgetLabel">$25</strong><input id="budget" type="range" min="1" max="100" value="25"></label><p id="split"></p><button class="dark" id="checkout">Continue to checkout</button><p id="paymentNote">Stripe Connect integration is planned, not active.</p></dialog><dialog id="loginDialog"><button class="close" id="closeLogin">✕</button><h2>Sign in</h2><p>Account registration will be available after authentication is configured.</p><input type="email" placeholder="you@example.com"><button class="dark" id="auth">Continue</button><p id="authNote"></p></dialog>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
 const categories=['All','Design','Marketing','Agency','Productivity','Social','Branding','UI / Product'];
-let category='All',query='',sort='new',canvas=true,visible=30,items=[],fetching=false,page=1,apiExhausted=false;let commonsPage=0,openversePage=1;const sourcePages=new Map();const inFlight=new Set();let validationPromise=null;let backgroundBusy=false;let activeSource=0;
-const screenshot=domain=>'https://screenshotof.com/'+encodeURIComponent(domain)+'?s=512';
+let category='All',query='',sort='new',canvas=true,visible=20,items=[],fetching=false,page=1,apiExhausted=false;let commonsPage=0,openversePage=1;const sourcePages=new Map();const inFlight=new Set();let validationPromise=null;let backgroundBusy=false;let activeSource=0;
+const screenshot=domain=>'https://image.thum.io/get/width/800/noanimate/https://'+domain;
 const seeds=[
 ['Linear','linear.app','UI / Product'],['Stripe','stripe.com','UI / Product'],['Framer','framer.com','Websites'],['Vercel','vercel.com','UI / Product'],['Figma','figma.com','UI / Product'],['Webflow','webflow.com','Websites'],['Readymag','readymag.com','Websites'],['Awwwards','awwwards.com','Websites'],['Resend','resend.com','UI / Product'],['Raycast','raycast.com','UI / Product'],['Notion','notion.so','UI / Product'],['Arc','arc.net','UI / Product'],['Pitch','pitch.com','UI / Product'],['Layers','layers.to','Portfolios'],['Contra','contra.com','Portfolios'],['Spline','spline.design','Websites'],['Lusion','lusion.co','Studios'],['Locomotive','locomotive.ca','Studios'],['Active Theory','activetheory.com','Studios'],['BASIC/DEPT','basicagency.com','Studios'],['Instrument','instrument.com','Studios'],['Pentagram','pentagram.com','Studios'],['Collins','wearecollins.com','Studios'],['Buck','buck.co','Studios'],['Ordinary Folk','ordinaryfolk.co','Studios'],['Build in Amsterdam','buildinamsterdam.com','Studios'],['Motto','wearemotto.com','Studios'],['Hello Monday','hellomonday.com','Studios'],['Ueno','ueno.co','Studios'],['Fantasy','fantasy.co','Studios'],['Monograph','monograph.com','UI / Product'],['Tally','tally.so','UI / Product'],['Attio','attio.com','UI / Product'],['Lemon Squeezy','lemonsqueezy.com','UI / Product'],['Superlist','superlist.com','UI / Product'],['Craft','craft.do','UI / Product'],['Miro','miro.com','UI / Product'],['Rive','rive.app','Websites'],['GSAP','gsap.com','Websites'],['Panic','panic.com','Websites'],['Gumroad','gumroad.com','Websites'],['Dribbble','dribbble.com','Portfolios'],['Behance','behance.net','Portfolios'],['Cargo','cargo.site','Portfolios'],['Semplice','semplice.com','Portfolios'],['Format','format.com','Portfolios'],['Adobe Portfolio','portfolio.adobe.com','Portfolios'],['Godly','godly.website','Websites'],['Siteinspire','siteinspire.com','Websites'],['Minimal Gallery','minimal.gallery','Websites'],['Land-book','land-book.com','Websites'],['Mobbin','mobbin.com','UI / Product'],['Page Flows','pageflows.com','UI / Product'],['UI8','ui8.net','UI / Product'],['Designspiration','designspiration.com','Portfolios'],['A24','a24films.com','Websites'],['Apple','apple.com','Websites'],['Nothing','nothing.tech','Websites'],['Teenage Engineering','teenage.engineering','Websites'],['Are.na','are.na','Portfolios']
 ];
@@ -438,19 +459,23 @@ function filtered(){
   }
   return a;
 }
-function filters(){const el=$('filters');el.replaceChildren(...categories.map(c=>{const b=document.createElement('button');b.textContent=c;b.className=category===c?'active':'';b.setAttribute('aria-pressed',String(category===c));b.onclick=()=>{category=c;visible=30;page=1;apiExhausted=false;filters();render();scheduleValidation();queueBackgroundPrefetch()};return b}))}
+function filters(){const el=$('filters');el.replaceChildren(...categories.map(c=>{const b=document.createElement('button');b.textContent=c;b.className=category===c?'active':'';b.setAttribute('aria-pressed',String(category===c));b.onclick=()=>{category=c;visible=20;page=1;apiExhausted=false;filters();render();scheduleValidation();queueBackgroundPrefetch()};return b}))}
 const cardNodes=new Map();
 function makeCard(x){
  const art=document.createElement('article');art.className='tile';art.dataset.designId=x.id;
  const a=document.createElement('a');a.href=x.url;a.target='_blank';a.rel='noopener noreferrer';a.title='Visit '+x.name;
- let img;if(x.animated&&/\.(mp4|webm)(?:\?|$)/i.test(x.src)){img=document.createElement('video');img.src=x.src;img.autoplay=true;img.loop=true;img.muted=true;img.playsInline=true;img.preload='auto';img.play().catch(()=>{});}else{img=document.createElement('img');img.alt='Preview: '+x.name;img.src=x.src;img.loading=x.animated?'eager':'lazy';img.decoding='async';}
+ let img;if(x.animated&&/\.(mp4|webm)(?:\?|$)/i.test(x.src)){img=document.createElement('video');img.src=x.src;img.autoplay=true;img.loop=true;img.muted=true;img.playsInline=true;img.preload='auto';img.play().catch(()=>{});}else{img=document.createElement('img');img.alt='Preview: '+x.name;img.src=x.src;img.loading='eager';img.decoding='async';}
  if(x.animated){art.classList.add('animated-design');const flag=document.createElement('span');flag.className='motion-tag';flag.textContent='▶ LOOP';art.append(flag)}
  img.onerror=()=>{
   failed.add(x.id);
   art.classList.add('image-unavailable');
-  if(img.tagName==='IMG'){
-    img.style.display='none';
+  if(img.tagName==='IMG' && !img.dataset.fallback){
+    img.dataset.fallback='1';
+    img.src='https://placehold.co/800x600/eeeeee/222222.png?text='
+      +encodeURIComponent(x.name||'Design');
+    return;
   }
+  if(img.tagName==='IMG')img.style.display='none';
 };
  const overlay=document.createElement('div');overlay.className='overlay';const name=document.createElement('strong');name.textContent=x.name;const host=document.createElement('small');host.textContent=x.domain;overlay.append(name,host);a.append(img,overlay);art.append(a);return art;
 }
@@ -466,7 +491,7 @@ function render(){
   art.className='tile'+shape+(x.animated?' animated-design':'');
   if(gallery.children[i]!==art)gallery.insertBefore(art,gallery.children[i]||null);
  });
- $('more').hidden=list.length<=visible;
+ $('more').hidden=(list.length<=visible);
  $('more').disabled=false;
 }
 async function scheduleValidation(){
@@ -569,7 +594,7 @@ $('more').onclick = async () => {
     const available = readyDesignCount();
 
     if (available > previous) {
-      visible = Math.min(previous + 30, available);
+      visible = Math.min(previous + 20, available);
       render();
 
       requestAnimationFrame(() => {
@@ -592,7 +617,7 @@ $('more').onclick = async () => {
 };
 
 $('view').onclick=()=>{canvas=!canvas;$('gallery').classList.toggle('grid-mode',!canvas);$('view').textContent=canvas?'Grid view':'Canvas view';render()};
-$('search').oninput=e=>{query=e.target.value.toLowerCase();visible=30;render();scheduleValidation()};
+$('search').oninput=e=>{query=e.target.value.toLowerCase();visible=20;render();scheduleValidation()};
 document.querySelectorAll('.sort-option').forEach(button=>button.onclick=()=>{sort=button.dataset.sort;document.querySelectorAll('.sort-option').forEach(b=>{const selected=b===button;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',String(selected))});render()});
 $('sponsor').onclick=()=>$('sponsorDialog').showModal();$('login').onclick=()=>$('loginDialog').showModal();$('closeSponsor').onclick=()=>$('sponsorDialog').close();$('closeLogin').onclick=()=>$('loginDialog').close();
 $('budget').oninput=()=>{let v=Number($('budget').value);$('budgetLabel').textContent='$'+v;$('split').textContent='Platform fee (5%): $'+(v*.05).toFixed(2)+' · Connected account: $'+(v*.95).toFixed(2)};$('budget').oninput();
