@@ -349,12 +349,69 @@ async function queueBackgroundPrefetch(){
  }finally{backgroundBusy=false}
 }
 async function discover(){return 0} // GitHub repository search disabled: homepages were often broken or irrelevant.
-$('more').onclick=()=>{let previous=visible;visible+=30;render();queueBackgroundPrefetch();requestAnimationFrame(()=>{const children=$('gallery').children;if(children[previous])children[previous].scrollIntoView({behavior:'smooth',block:'start'})})};
+
+// Reveal only images that have already been checked and preloaded.
+let loadingMore = false;
+
+function readyDesignCount() {
+  return filtered().filter(x => ready.has(x.id)).length;
+}
+
+function updateMoreButton() {
+  const button = $('more');
+  const available = readyDesignCount();
+  button.disabled = loadingMore;
+  button.setAttribute(
+    'aria-label',
+    available > visible
+      ? 'Show 30 more preloaded designs'
+      : 'Prepare more designs'
+  );
+}
+
+$('more').onclick = async () => {
+  if (loadingMore) return;
+  loadingMore = true;
+  updateMoreButton();
+
+  try {
+    // If the next batch is not ready, finish preloading first.
+    if (readyDesignCount() <= visible) {
+      await scheduleValidation();
+      await queueBackgroundPrefetch();
+    }
+
+    const previous = visible;
+    const available = readyDesignCount();
+
+    if (available > previous) {
+      visible = Math.min(previous + 30, available);
+      render();
+
+      requestAnimationFrame(() => {
+        const next = $('gallery').children[previous];
+        if (next) {
+          next.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    }
+  } finally {
+    loadingMore = false;
+    updateMoreButton();
+
+    // Prepare the following batch without waiting for another click.
+    queueBackgroundPrefetch();
+  }
+};
+
 $('view').onclick=()=>{canvas=!canvas;$('gallery').classList.toggle('grid-mode',!canvas);$('view').textContent=canvas?'Grid view':'Canvas view';render()};
 $('search').oninput=e=>{query=e.target.value.toLowerCase();visible=30;render();scheduleValidation()};
 document.querySelectorAll('.sort-option').forEach(button=>button.onclick=()=>{sort=button.dataset.sort;document.querySelectorAll('.sort-option').forEach(b=>{const selected=b===button;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',String(selected))});render()});
 $('sponsor').onclick=()=>$('sponsorDialog').showModal();$('login').onclick=()=>$('loginDialog').showModal();$('closeSponsor').onclick=()=>$('sponsorDialog').close();$('closeLogin').onclick=()=>$('loginDialog').close();
 $('budget').oninput=()=>{let v=Number($('budget').value);$('budgetLabel').textContent='$'+v;$('split').textContent='Platform fee (5%): $'+(v*.05).toFixed(2)+' · Connected account: $'+(v*.95).toFixed(2)};$('budget').oninput();
 $('checkout').onclick=()=>$('paymentNote').textContent='Payments are not configured. No charge was made.';$('auth').onclick=()=>$('authNote').textContent='Authentication is not configured yet.';
-filters();render();$('status').textContent='';discoverCaptured().then(()=>queueBackgroundPrefetch());scheduleValidation();
+filters();render();$('status').textContent='';scheduleValidation().then(()=>queueBackgroundPrefetch());discoverCaptured();
 </script><span id="count" hidden style="display:none!important"></span></body></html>
