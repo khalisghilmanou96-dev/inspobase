@@ -1090,7 +1090,7 @@ function installInfiniteFeed(){
  window.addEventListener('resize',()=>advanceInfiniteFeed(),{passive:true});
 }
 
-async async function queueBackgroundPrefetch(){
+async function queueBackgroundPrefetch(){
  if(backgroundBusy)return;
  backgroundBusy=true;
  try{
