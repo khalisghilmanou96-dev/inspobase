@@ -427,7 +427,109 @@
   }
 }
 
-</style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">THE CREATIVE INDEX <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> BLACK / GREY EDITION</div></section><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div><div class="toolbar"><div class="tools"><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option selected" data-sort="new" aria-pressed="true"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option" data-sort="popular" aria-pressed="false"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic grid-mode" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs" hidden>↓</button><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. Screenshots by screenshotof.com.</footer>
+
+/* V26 — Vertical animated category sidebar */
+.explore-layout {
+  display: grid;
+  grid-template-columns: 205px minmax(0, 1fr);
+  gap: 34px;
+  align-items: start;
+}
+
+.explore-sidebar {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
+
+.explore-content {
+  min-width: 0;
+}
+
+.explore-sidebar .filters-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+  margin: 0;
+  padding: 10px 0;
+  border: 0;
+}
+
+.explore-sidebar .filters {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.explore-sidebar .filters button {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  text-align: left;
+  padding: 13px 14px;
+  border-radius: 7px;
+  transition:
+    transform .3s cubic-bezier(.2,.8,.2,1),
+    background .3s ease,
+    color .3s ease;
+  animation: category-slide-in .55s both;
+}
+
+.explore-sidebar .filters button:nth-child(1) { animation-delay: .04s; }
+.explore-sidebar .filters button:nth-child(2) { animation-delay: .08s; }
+.explore-sidebar .filters button:nth-child(3) { animation-delay: .12s; }
+.explore-sidebar .filters button:nth-child(4) { animation-delay: .16s; }
+.explore-sidebar .filters button:nth-child(5) { animation-delay: .20s; }
+.explore-sidebar .filters button:nth-child(6) { animation-delay: .24s; }
+.explore-sidebar .filters button:nth-child(7) { animation-delay: .28s; }
+.explore-sidebar .filters button:nth-child(8) { animation-delay: .32s; }
+
+.explore-sidebar .filters button:hover {
+  transform: translateX(7px);
+}
+
+.explore-sidebar .filters button.active {
+  background: #171717;
+  color: #fff;
+  transform: translateX(5px);
+}
+
+@keyframes category-slide-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 800px) {
+  .explore-layout {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .explore-sidebar {
+    position: static;
+  }
+
+  .explore-sidebar .filters {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .explore-sidebar .filters button {
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .explore-sidebar .filters button {
+    animation: none;
+    transition: none;
+  }
+}
+
+</style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">THE CREATIVE INDEX <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> BLACK / GREY EDITION</div></section><div class="explore-layout"><aside class="explore-sidebar"><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div></aside><div class="explore-content"><div class="toolbar"><div class="tools"><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option selected" data-sort="new" aria-pressed="true"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option" data-sort="popular" aria-pressed="false"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic grid-mode" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs" hidden>↓</button></div></div><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. Screenshots by screenshotof.com.</footer>
 <dialog id="sponsorDialog"><button class="close" id="closeSponsor">✕</button><h2>Sponsor a design</h2><p>Set your budget. Payments are not enabled yet.</p><label>Website URL<input id="url" type="url" placeholder="https://example.com"></label><label>Budget: <strong id="budgetLabel">$25</strong><input id="budget" type="range" min="1" max="100" value="25"></label><p id="split"></p><button class="dark" id="checkout">Continue to checkout</button><p id="paymentNote">Stripe Connect integration is planned, not active.</p></dialog>
 <span id="count" hidden></span>
 <script>
