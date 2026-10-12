@@ -733,7 +733,18 @@ html, body {
 #infinite-sentinel{height:1px;width:100%;pointer-events:none}
 @media(prefers-reduced-motion:reduce){#gallery.category-transition{animation:none!important}}
 </style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">INSPOBASE <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> DESIGN SELECTION</div></section><div class="explore-layout"><aside class="explore-sidebar"><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div></aside><div class="explore-content"><div class="toolbar"><div class="tools"><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option" data-sort="new" aria-pressed="false"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option selected" data-sort="popular" aria-pressed="true"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic grid-mode" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs">↓</button></div></div><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. </footer>
-<dialog id="sponsorDialog"><button class="close" id="closeSponsor">✕</button><h2>Sponsor a design</h2><label>Website URL<input id="url" type="url" placeholder="https://example.com"></label><label>Budget: <strong id="budgetLabel">$25</strong><input id="budget" type="range" min="1" max="100" value="25"></label><p id="split"></p><button class="dark" id="checkout">Continue to checkout</button><p id="paymentNote">Stripe Connect integration is planned, not active.</p></dialog>
+<dialog id="sponsorDialog">
+<button class="close" id="closeSponsor" aria-label="Close">✕</button>
+<h2>Sponsor a design</h2>
+<label>Website URL
+<input id="url" type="url" placeholder="https://example.com">
+</label>
+<p>Support inspoBase and help showcase inspiring design.</p>
+<p><strong>Choose your own sponsorship amount on Creem.</strong></p>
+<p>You can enter any amount from $1 to $105 directly on the secure Creem checkout page.</p>
+<button class="dark" id="checkout">Continue to Creem ↗</button>
+<p id="paymentNote" role="status">Secure checkout powered by Creem. Coming soon.</p>
+</dialog>
 <span id="count" hidden></span>
 <script>
 'use strict';
@@ -1152,18 +1163,39 @@ $('more').onclick = async () => {
 $('search').oninput=e=>{query=e.target.value.toLowerCase();visible=20;render();scheduleValidation()};
 document.querySelectorAll('.sort-option').forEach(button=>button.onclick=()=>{sort=button.dataset.sort;document.querySelectorAll('.sort-option').forEach(b=>{const selected=b===button;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',String(selected))});render()});
 $('sponsor').onclick=()=>$('sponsorDialog').showModal();$('closeSponsor').onclick=()=>$('sponsorDialog').close();
-$('budget').oninput=()=>{
-  const budget=Number($('budget').value);
-  const fee=Math.round(budget*5)/100;
-  const total=budget+fee;
-  $('budgetLabel').textContent='$'+budget.toFixed(2);
-  $('split').textContent=
-    'Sponsorship: $'+budget.toFixed(2)+
-    ' · Service fee (5%): +$'+fee.toFixed(2)+
-    ' · Total: $'+total.toFixed(2);
+// Paste the public Creem payment link here when available.
+const CREEM_PAYMENT_URL = '';
+
+$('checkout').onclick = () => {
+  const note = $('paymentNote');
+  const website = $('url').value.trim();
+
+  if (website) {
+    try {
+      const parsed = new URL(website);
+      if (!['http:', 'https:'].includes(parsed.protocol)) {
+        throw new Error('Invalid URL');
+      }
+    } catch {
+      note.textContent = 'Please enter a valid website URL.';
+      return;
+    }
+  }
+
+  if (!CREEM_PAYMENT_URL) {
+    note.textContent = 'Creem checkout is coming soon. No payment has been made.';
+    return;
+  }
+
+  try {
+    const checkout = new URL(CREEM_PAYMENT_URL);
+    if (checkout.protocol !== 'https:') throw new Error('Invalid checkout URL');
+    window.open(checkout.href, '_blank', 'noopener,noreferrer');
+    note.textContent = 'Complete your payment and choose your amount on Creem.';
+  } catch {
+    note.textContent = 'Checkout is temporarily unavailable.';
+  }
 };
-$('budget').oninput();
-$('checkout').onclick=()=>$('paymentNote').textContent='Payments are not configured. No charge was made.';
 filters();
 visible=20;
 render();
