@@ -732,17 +732,73 @@ html, body {
 /* V31 infinite feed */
 #infinite-sentinel{height:1px;width:100%;pointer-events:none}
 @media(prefers-reduced-motion:reduce){#gallery.category-transition{animation:none!important}}
+
+/* inspoBase V36 - Creem checkout button */
+#checkout {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+  transition:
+    transform .3s cubic-bezier(.2,.8,.2,1),
+    box-shadow .3s ease,
+    background-color .3s ease;
+}
+
+#checkout::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255,255,255,.24) 48%,
+    transparent 76%
+  );
+  transform: translateX(-130%);
+  transition: transform .65s ease;
+  pointer-events: none;
+}
+
+#checkout:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.18);
+}
+
+#checkout:hover::before {
+  transform: translateX(130%);
+}
+
+#checkout:active {
+  transform: translateY(0) scale(.98);
+  box-shadow: 0 3px 10px rgba(0,0,0,.12);
+}
+
+#checkout:focus-visible {
+  outline: 2px solid #666;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #checkout,
+  #checkout::before {
+    transition: none;
+  }
+  #checkout:hover,
+  #checkout:active {
+    transform: none;
+  }
+}
+
 </style></head><body><header><div class="nav"><div class="brand" aria-label="inspoBase">inspo<span>Base</span></div><div class="nav-right"><button class="dark" id="sponsor">Sponsor a design</button></div></div></header><main><section class="hero"><div class="eyebrow">INSPOBASE <span class="muted">/ 2026</span></div><h1>Ideas worth<br><span class="grey">looking at.</span></h1><p class="intro">A living collection of inspiring websites, studios and digital experiences. Discover something new.</p><div class="edition">CURATED REFERENCES <span>—</span> DESIGN SELECTION</div></section><div class="explore-layout"><aside class="explore-sidebar"><div class="filters-wrap"><span class="filter-label">EXPLORE BY</span><div class="filters" id="filters" role="group" aria-label="Design categories"></div></div></aside><div class="explore-content"><div class="toolbar"><div class="tools"><input id="search" type="search" placeholder="Search designs…" aria-label="Search designs"><div class="sort-switch" role="group" aria-label="Sort designs"><span class="sort-label">SORT BY</span><button type="button" class="sort-option" data-sort="new" aria-pressed="false"><span class="sort-symbol">↗</span> Newest</button><button type="button" class="sort-option selected" data-sort="popular" aria-pressed="true"><span class="sort-symbol">✦</span> Popular</button></div></div></div><div class="mosaic grid-mode" id="gallery"></div><button id="more" class="down" aria-label="Discover 30 more designs" title="Discover more designs">↓</button></div></div><p id="status" class="status" aria-live="polite" hidden></p></main><footer>inspoBase © 2026 · Website inspiration from publicly available project links. </footer>
 <dialog id="sponsorDialog">
 <button class="close" id="closeSponsor" aria-label="Close">✕</button>
 <h2>Sponsor a design</h2>
-<label>Website URL
-<input id="url" type="url" placeholder="https://example.com">
-</label>
+
 <p>Support inspoBase and help showcase inspiring design.</p>
 <p><strong>Choose your own sponsorship amount on Creem.</strong></p>
 <p>You can enter any amount from $1 to $105 directly on the secure Creem checkout page.</p>
-<button class="dark" id="checkout">Continue to Creem ↗</button>
+<button class="dark" id="checkout">Continue to Creem</button>
 <p id="paymentNote" role="status">Secure checkout powered by Creem. Coming soon.</p>
 </dialog>
 <span id="count" hidden></span>
@@ -1168,21 +1224,7 @@ const CREEM_PAYMENT_URL = '';
 
 $('checkout').onclick = () => {
   const note = $('paymentNote');
-  const website = $('url').value.trim();
-
-  if (website) {
-    try {
-      const parsed = new URL(website);
-      if (!['http:', 'https:'].includes(parsed.protocol)) {
-        throw new Error('Invalid URL');
-      }
-    } catch {
-      note.textContent = 'Please enter a valid website URL.';
-      return;
-    }
-  }
-
-  if (!CREEM_PAYMENT_URL) {
+if (!CREEM_PAYMENT_URL) {
     note.textContent = 'Creem checkout is coming soon. No payment has been made.';
     return;
   }
