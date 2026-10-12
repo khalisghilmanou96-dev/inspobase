@@ -67,7 +67,43 @@ async function discoverCaptured(){
 }
 const checked=new Map();const ready=new Set();const failed=new Set();let validationRunning=false;
 function checkImage(src,timeout=8500){if(checked.has(src))return checked.get(src);let promise=new Promise(resolve=>{const img=new Image();let settled=false;const t=setTimeout(()=>finish(false),timeout);function finish(ok){if(settled)return;settled=true;clearTimeout(t);resolve(ok)}img.onload=()=>finish(img.naturalWidth>0);img.onerror=()=>finish(false);img.src=src;if(img.complete&&img.naturalWidth)finish(true)});checked.set(src,promise);return promise}
-function filtered(){let a=items.filter(x=>(category==='All'||x.cat===category)&&(x.name+' '+x.domain).toLowerCase().includes(query));a.sort((x,y)=>sort==='popular'?y.score-x.score:y.date-x.date);return a}
+function popularity(item){
+  // Stable ranking based on visual source and recognizable design references.
+  const premium = [
+    'stripe.com','linear.app','webflow.com','apple.com',
+    'pentagram.com','raycast.com','notion.so','framer.com',
+    'buck.co','lusion.co','resend.com','rive.app'
+  ];
+  const domain = (item.domain || '').toLowerCase();
+  const index = premium.indexOf(domain);
+  if (index !== -1) return 10000 - index * 300;
+  if (item.animated) return 1500;
+  return Number(item.score) || 0;
+}
+
+function newest(item){
+  return Number(item.date) || 0;
+}
+
+function filtered(){
+  const a = items.filter(x =>
+    (category === 'All' || x.cat === category) &&
+    (x.name + ' ' + x.domain).toLowerCase().includes(query)
+  );
+
+  if (sort === 'popular') {
+    a.sort((x,y) =>
+      popularity(y) - popularity(x) ||
+      x.name.localeCompare(y.name)
+    );
+  } else {
+    a.sort((x,y) =>
+      newest(y) - newest(x) ||
+      x.name.localeCompare(y.name)
+    );
+  }
+  return a;
+}
 function filters(){const el=$('filters');el.replaceChildren(...categories.map(c=>{const b=document.createElement('button');b.textContent=c;b.className=category===c?'active':'';b.setAttribute('aria-pressed',String(category===c));b.onclick=()=>{category=c;visible=30;page=1;apiExhausted=false;filters();render();scheduleValidation();queueBackgroundPrefetch()};return b}))}
 const cardNodes=new Map();
 function makeCard(x){
